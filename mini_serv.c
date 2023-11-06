@@ -14,15 +14,15 @@ void	newClientMessage();
 void	fatalError(char *error);
 void	sendMessage(int senderSocket);
 
-	int serverSocket, newClientSocket, maxfd, id = 0;
+int serverSocket, newClientSocket, maxfd, id = 0;
 
-	int		clientsIDs[65000];
-	char	buffer[200100];
+int		clientsIDs[65000];
+char	buffer[200100];
 
-	struct		sockaddr_in serverAddress, newClientAddress; 
-	socklen_t	len;
+struct		sockaddr_in serverAddress, newClientAddress;
+socklen_t	len;
 
-	fd_set	aset, wset, rset;
+fd_set	aset, wset, rset;
 
 int main(int argc, char **argv) {
 
