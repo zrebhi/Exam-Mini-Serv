@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 void	serverSetup(int portNumber);
 void	selectSetup();
 void	newClientConnection();
@@ -34,7 +35,9 @@ int main(int argc, char **argv) {
 	selectSetup();
 
 	while (1) {
-		if (select(maxfd + 1, &rset, &wset, 0, 0) < 0)
+		rset = wset = aset;
+
+		if (select(maxfd + 1, &rset, &wset, 0, NULL) < 0)
 			continue;
 		if (FD_ISSET(serverSocket, &rset))
 			newClientConnection();
@@ -82,6 +85,7 @@ void	newClientConnection() {
 	if (newClientSocket < 0)
 		fatalError("Fatal error\n");
 	sprintf(buffer, "server: client %d just arrived\n", id);
+	// printf("%s\n", buffer); debug
 	sendMessage(newClientSocket);
 	clientsIDs[newClientSocket] = id++;
 	FD_SET(newClientSocket, &aset);
@@ -94,14 +98,18 @@ void	newClientMessage() {
 			int r = 1;
 			char msg[200000];
 			bzero(&msg, sizeof(msg));
-			while (r == 1 && msg[strlen(msg - 1)] != '\n')
+			while (r == 1 && msg[strlen(msg) - 1] != '\n')
 				r = recv(fd, msg + strlen(msg), 1, 0);
 			if (r <= 0) {
 				sprintf(buffer, "server: client %d just left\n", clientsIDs[fd]);
+				// printf("%s\n", buffer); debug
 				FD_CLR(fd, &aset);
 				close(fd);
-			} else
+			} else {
 				sprintf(buffer, "client %d: %s", clientsIDs[fd], msg);
+				// printf("%s\n", buffer); debug
+
+			}
 			sendMessage(fd);
 		}
 	}
