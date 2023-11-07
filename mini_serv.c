@@ -108,7 +108,6 @@ void	newClientMessage() {
 			} else {
 				sprintf(buffer, "client %d: %s", clientsIDs[fd], msg);
 				// printf("%s\n", buffer); debug
-
 			}
 			sendMessage(fd);
 		}
